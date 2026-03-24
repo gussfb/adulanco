@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a7c2e"/>
+      <stop offset="100%" style="stop-color:#2d5016"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="200" height="200" rx="32" fill="url(#bg)"/>
+  <!-- Soil/ground line -->
+  <path d="M30 145 Q60 138 100 142 Q140 146 170 140" stroke="#8B6914" stroke-width="3" fill="none" opacity="0.6"/>
+  <!-- Distribution curve (fertilizer spread) -->
+  <path d="M30 130 Q50 90 70 105 Q90 60 100 55 Q110 60 130 105 Q150 90 170 130" stroke="#fff" stroke-width="3" fill="rgba(255,255,255,0.15)" stroke-linecap="round"/>
+  <!-- Dots for collectors -->
+  <circle cx="50" cy="118" r="3" fill="#d4a84b"/>
+  <circle cx="70" cy="105" r="3" fill="#d4a84b"/>
+  <circle cx="90" cy="72" r="3" fill="#d4a84b"/>
+  <circle cx="100" cy="55" r="3" fill="#d4a84b"/>
+  <circle cx="110" cy="72" r="3" fill="#d4a84b"/>
+  <circle cx="130" cy="105" r="3" fill="#d4a84b"/>
+  <circle cx="150" cy="118" r="3" fill="#d4a84b"/>
+  <!-- Text -->
+  <text x="100" y="185" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="700" fill="#fff" letter-spacing="1">ADULANCO</text>
+  <text x="100" y="38" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="600" fill="rgba(255,255,255,0.8)">v3.5</text>
+</svg>

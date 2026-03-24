@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adulanco 3.5 — Distribuição de Fertilizante</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <h1>Adulanco 3.5</h1>
+      <div class="subtitle">Simulador de faixa de aplicação de fertilizante sólido</div>
+    </div>
+    <div style="display:flex;gap:0.5rem">
+      <button class="btn btn-report" id="btnNovaMedicao">Nova Medição</button>
+      <button class="btn btn-report" id="btnRelatorio">Gerar Relatório PDF</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="parametros">Parâmetros</button>
+    <button class="tab-btn" data-tab="dados">Entrada de Dados</button>
+    <button class="tab-btn" data-tab="resultados">Resultados</button>
+    <button class="tab-btn" data-tab="perfil">Perfil</button>
+    <button class="tab-btn" data-tab="visualizacao">Visualização</button>
+  </nav>
+
+  <!-- ========== ABA 1: PARÂMETROS ========== -->
+  <section id="parametros" class="tab-content active">
+    <h2>Configuração do Ensaio</h2>
+
+    <div class="params-grid" style="margin-bottom:0.5rem">
+      <div class="param-group">
+        <label for="produto">Produto (opcional)</label>
+        <input type="text" id="produto" placeholder="Ex: KCl 60%">
+      </div>
+      <div class="param-group">
+        <label for="fornecedor">Fornecedor (opcional)</label>
+        <input type="text" id="fornecedor" placeholder="Ex: Mosaic">
+      </div>
+    </div>
+
+    <div class="params-grid">
+      <div class="param-group">
+        <label for="coletoresReais">Nº de coletores (bandejas)</label>
+        <input type="number" id="coletoresReais" min="3" max="200" value="13">
+      </div>
+      <div class="param-group">
+        <label for="larguraBandeja">Largura da bandeja (cm)</label>
+        <input type="number" id="larguraBandeja" min="1" max="200" value="50">
+      </div>
+      <div class="param-group">
+        <label for="espacamento">Espaçamento entre bandejas (cm)</label>
+        <input type="number" id="espacamento" min="0" max="1000" value="200">
+      </div>
+      <div class="param-group">
+        <label for="numRepeticoes">Nº de repetições</label>
+        <input type="number" id="numRepeticoes" min="1" max="20" value="1">
+      </div>
+      <div class="param-group">
+        <label for="numPassadas">Nº de passadas</label>
+        <input type="number" id="numPassadas" min="1" max="20" value="3">
+      </div>
+      <div class="param-group">
+        <label for="coletorCentral">Coletor central (bandeja nº)</label>
+        <input type="number" id="coletorCentral" min="1" max="200" value="7">
+      </div>
+      <div class="param-group">
+        <label>Coletores centrais</label>
+        <div class="radio-group">
+          <label><input type="radio" name="parImpar" value="impar" checked> Ímpar</label>
+          <label><input type="radio" name="parImpar" value="par"> Par</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="infoCalculado" class="msg-info" style="display:none"></div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" id="btnCriarTabela">Criar Tabela</button>
+    </div>
+  </section>
+
+  <!-- ========== ABA 2: ENTRADA DE DADOS ========== -->
+  <section id="dados" class="tab-content">
+    <h2>Entrada de Dados</h2>
+    <div id="tabelaDadosContainer">
+      <p class="msg-empty">Configure os parâmetros e clique em "Criar Tabela" para começar.</p>
+    </div>
+    <div class="btn-group" id="btnsDados" style="display:none">
+      <button class="btn btn-primary" id="btnCalcular">Calcular Distribuição</button>
+      <button class="btn btn-warning" id="btnCarregarExemplo">Carregar Exemplo</button>
+    </div>
+  </section>
+
+  <!-- ========== ABA 3: RESULTADOS ========== -->
+  <section id="resultados" class="tab-content">
+    <h2>Resultados — Coeficiente de Variação</h2>
+
+    <div class="optimal-widths" id="optimalWidths" style="display:none">
+      <div class="optimal-card alt-dir">
+        <h3>Alternado Direito</h3>
+        <div class="values" id="optAltDir"></div>
+      </div>
+      <div class="optimal-card alt-esq">
+        <h3>Alternado Esquerdo</h3>
+        <div class="values" id="optAltEsq"></div>
+      </div>
+      <div class="optimal-card continuo">
+        <h3>Contínuo</h3>
+        <div class="values" id="optContinuo"></div>
+      </div>
+    </div>
+
+    <div class="chart-container" id="chartCVContainer" style="display:none">
+      <canvas id="chartCV"></canvas>
+    </div>
+
+    <div class="table-wrapper" id="tabelaResultadosContainer">
+      <p class="msg-empty">Insira os dados e clique em "Calcular Distribuição".</p>
+    </div>
+  </section>
+
+  <!-- ========== ABA 4: PERFIL ========== -->
+  <section id="perfil" class="tab-content">
+    <h2>Perfil de Distribuição</h2>
+    <div class="chart-container" id="chartHistContainer" style="display:none">
+      <canvas id="chartHist"></canvas>
+    </div>
+    <p class="msg-empty" id="perfilEmpty">Insira os dados e clique em "Calcular Distribuição".</p>
+  </section>
+
+  <!-- ========== ABA 5: VISUALIZAÇÃO ========== -->
+  <section id="visualizacao" class="tab-content">
+    <h2>Visualização — Perfil de Distribuição</h2>
+
+    <div class="params-grid" style="max-width:800px">
+      <div class="param-group">
+        <label for="larguraSimularAltDir">Largura Alt. Direito (m)</label>
+        <input type="number" id="larguraSimularAltDir" step="0.5" min="0.5" value="14">
+      </div>
+      <div class="param-group">
+        <label for="larguraSimularAltEsq">Largura Alt. Esquerdo (m)</label>
+        <input type="number" id="larguraSimularAltEsq" step="0.5" min="0.5" value="26">
+      </div>
+      <div class="param-group">
+        <label for="larguraSimularCont">Largura Contínuo (m)</label>
+        <input type="number" id="larguraSimularCont" step="0.5" min="0.5" value="20">
+      </div>
+      <div class="param-group" style="justify-content:flex-end">
+        <button class="btn btn-primary" id="btnSimular">Simular</button>
+      </div>
+    </div>
+
+    <div class="chart-container" id="vizAltContainer" style="display:none">
+      <h3 style="text-align:center;margin-bottom:0.5rem">DISTRIBUIÇÃO SIMULADA PARA O SISTEMA ALTERNADO</h3>
+      <canvas id="canvasAlternado"></canvas>
+    </div>
+
+    <div class="chart-container" id="vizContContainer" style="display:none">
+      <h3 style="text-align:center;margin-bottom:0.5rem">DISTRIBUIÇÃO SIMULADA PARA O SISTEMA CONTÍNUO</h3>
+      <canvas id="canvasContinuo"></canvas>
+    </div>
+  </section>
+
+  <script src="lib/chart.umd.min.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/report.js"></script>
+  <script src="js/app.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
+</body>
+</html>
